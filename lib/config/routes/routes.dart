@@ -8,20 +8,23 @@ import '../../pages/home/components/user_screen.dart';
 import '../../pages/home/home_page.dart';
 
 part 'routes.gr.dart';
-@AutoRouterConfig( replaceInRouteName: 'Page|Screen,Route',)
+
+@AutoRouterConfig(
+  replaceInRouteName: 'Page|Screen,Route',
+)
 class AppRouter extends _$AppRouter {
   @override
-  List<AutoRoute> get routes =>[
-    AutoRoute(page: LoginRoute.page, path: '/login', initial: true),
-    AutoRoute(page: HomeRoute.page, path: '/home', children: [
-      AutoRoute(page: DashboardRoute.page, path: '/dashboard'),
-      AutoRoute(page: UsersRoute.page, path: '/users'),
-      AutoRoute(page: DonationRoute.page, path: '/donations'),
-      AutoRoute(page: RequestRoute.page, path: '/requests'),
-    ]),
-    //redirect to login page if no route found
-    RedirectRoute(path: '*', redirectTo: '/login'),
-    RedirectRoute(path: '/', redirectTo: '/login'),
-  ];
-
+  List<AutoRoute> get routes => [
+        AutoRoute(page: LoginRoute.page, path: '/login', initial: true),
+        AutoRoute(page: HomeRoute.page, path: '/home', children: [
+          RedirectRoute(path: '', redirectTo: 'dashboard'),
+          AutoRoute(page: DashboardRoute.page, path: 'dashboard'),
+          AutoRoute(page: UsersRoute.page, path: 'users'),
+          AutoRoute(page: DonationRoute.page, path: 'donations'),
+          AutoRoute(page: RequestRoute.page, path: 'requests'),
+        ]),
+        //redirect to login page if no route found
+        RedirectRoute(path: '*', redirectTo: '/login'),
+        RedirectRoute(path: '/', redirectTo: '/login'),
+      ];
 }
