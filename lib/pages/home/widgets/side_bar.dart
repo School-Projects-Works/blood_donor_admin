@@ -4,7 +4,7 @@ import 'package:blood_donor_admin/core/components/constants/enums.dart';
 import 'package:blood_donor_admin/styles/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import '../../../state/navigation_state.dart';
 
 class SideBar extends ConsumerWidget {
@@ -40,14 +40,33 @@ class SideBar extends ConsumerWidget {
             const SizedBox(
               height: 40,
             ),
-            Expanded(
+             Expanded(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SideBarItem(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [ 
+                  SideBarItem(
                     destination: DashboardRoute(),
                     title: 'Dashboard',
                     icon: Icons.apps,
+                    page: HomePages.dashboard,
+                  ),
+                  SideBarItem(
+                    destination: RequestRoute(),
+                    title: 'Blood Requests',
+                    icon: MdiIcons.heartPulse,
+                    page: HomePages.request,
+                  ),
+                  SideBarItem(
+                    destination: DonationRoute(),
+                    title: 'Donations',
+                    icon: MdiIcons.bloodBag,
+                    page: HomePages.donations,
+                  ),
+                  SideBarItem(
+                    destination: UsersRoute(),
+                    title: 'Resgistered Users',
+                    icon: Icons.person,
+                    page: HomePages.users,
                   ),
                 ],
               ),
@@ -89,16 +108,15 @@ class _SideBarItemState extends ConsumerState<SideBarItem> {
           color: isHovered
               ? Colors.white.withOpacity(0.5)
               :ref.watch(navigationPageProvider) ==
-                      HomePages.values
-           mn    .firstWhere(
-                  (element) => element.name == widget.destination!.routeName)
+                      widget.page
                   ? Colors.white
                   : Colors.transparent,
           child: size < 100
               ? Center(
                   child: Icon(
                     widget.icon,
-                    color: Colors.white,
+                    color:ref.watch(navigationPageProvider) ==
+                      widget.page?primaryColor: Colors.white,
                   ),
                 )
               : Row(children: [
@@ -107,14 +125,16 @@ class _SideBarItemState extends ConsumerState<SideBarItem> {
                   ),
                   Icon(
                     widget.icon,
-                    color: Colors.white,
+                   color:ref.watch(navigationPageProvider) ==
+                      widget.page?primaryColor: Colors.white,
                   ),
                   const SizedBox(
                     width: 10,
                   ),
                   Text(
                     widget.title!,
-                    style: const TextStyle(color: Colors.white),
+                    style:  TextStyle( color:ref.watch(navigationPageProvider) ==
+                      widget.page?primaryColor: Colors.white,),
                   )
                 ]),
         ));
