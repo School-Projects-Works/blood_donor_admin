@@ -391,10 +391,10 @@ class CustomDialog {
                     padding: EdgeInsets.zero,
                     icon: const CircleAvatar(
                       backgroundColor: Colors.red,
-                      radius: 40,
+                      radius: 20,
                       child: Padding(
                         padding: EdgeInsets.all(8.0),
-                        child: Icon(
+                        child: Icon( 
                           Icons.close,
                           color: Colors.white,
                           size: 18,

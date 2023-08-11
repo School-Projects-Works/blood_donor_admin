@@ -1,12 +1,16 @@
+import 'package:blood_donor_admin/styles/styles.dart';
 import 'package:flutter/material.dart';
+
 
 class DashboardItem extends StatefulWidget {
   const DashboardItem(
-      {super.key, this.title, this.value, this.color, this.icon});
+      {super.key, this.title, this.value, this.color, this.icon, this.loading, this.error});
   final String? title;
   final double? value;
   final Color? color;
   final IconData? icon;
+  final bool? loading;
+  final bool?error;
 
   @override
   State<DashboardItem> createState() => _DashboardItemState();
@@ -45,7 +49,13 @@ class _DashboardItemState extends State<DashboardItem> {
               ),
             ],
           ),
-          child: Column(
+          child:widget.loading??false?
+          const Center(child: CircularProgressIndicator(
+            color: Colors.white,
+          ),):
+          widget.error??false?
+           Center(child: Text('Something went wrong',style: normalText(color: Colors.white),),):
+           Column(
               crossAxisAlignment: CrossAxisAlignment.end,
             children: [
             Row(

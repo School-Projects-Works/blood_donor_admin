@@ -79,15 +79,21 @@ class FireStoreServices {
         .snapshots();
   }
 
-  static Future<void> deleteRequest(String s) async {
-    await _fireStore.collection('requests').doc(s).delete();
-  }
-
-  static Future<void> markRequestAsCompleted(String s) async {
-    await _fireStore
+  static Future<bool> deleteRequest(String s) async {
+    var response = await _fireStore
         .collection('requests')
         .doc(s)
-        .update({'isCompleted': true});
+        .delete()
+        .then((value) => true)
+        .catchError((error) => false);
+    return response;
+  }
+
+  static Future<bool> markRequestAsCompleted(String status, String id) async {
+    return await _fireStore
+        .collection('requests')
+        .doc(id)
+        .update({'isCompleted': true, 'status': status}).then((value) => true).catchError((error) => false);
   }
 
   static Stream<QuerySnapshot<Map<String, dynamic>>> getMyDonationStream(
@@ -115,5 +121,33 @@ class FireStoreServices {
     await _fireStore.collection('requests').doc(requestId).update({
       'donors': FieldValue.arrayRemove([donorId])
     });
+  }
+
+  static  Stream<QuerySnapshot<Map<String, dynamic>>> getAllDonationsStream() {
+    return _fireStore
+        .collection('donations')
+        .orderBy('createdAt', descending: true)
+        .snapshots();
+  }
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>>getUsersStream() {
+    return _fireStore
+        .collection('users')
+        .orderBy('createdAt', descending: true)
+        .snapshots();
+  }
+
+  static updateRequestStatus(String id, String status) async{
+    await _fireStore.collection('requests').doc(id).update({'status': status});
+  }
+
+  static Future<bool>changeRequestStatus(String status, String id)async {
+    var response= await _fireStore.collection('requests').doc(id).update({'status': status}).then((value) => true).catchError((error) => false);
+    return response;
+  }
+
+  static Future<bool> changeUserStatus(String status, String id) async{
+    var response= await _fireStore.collection('users').doc(id).update({'status': status}).then((value) => true).catchError((error) => false);
+    return response;
   }
 }
