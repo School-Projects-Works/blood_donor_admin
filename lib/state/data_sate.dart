@@ -91,3 +91,28 @@ class SingleUserProvider extends StateNotifier<void> {
 
   }
 }
+
+
+final donationsProvider = StateNotifierProvider<DonationProvider, void>((ref){
+  return DonationProvider();
+
+});
+
+class DonationProvider extends StateNotifier<void> {
+  DonationProvider() : super(null);
+
+  void updateDonationStatus(String id, String status, { double? quantity})async {
+    CustomDialog.dismiss();
+    CustomDialog.showLoading(message: 'Please wait...Updating status');
+    await FireStoreServices.updateDonationStatus(id, status, quantity: quantity).then((value) {
+      if(value){
+        CustomDialog.dismiss();
+        CustomDialog.showSuccess(message: 'Status updated successfully',title: 'Success');
+      }else{
+        CustomDialog.dismiss();
+        CustomDialog.showError(message: 'Failed to update status',title: 'Error');
+      }
+    });
+  }
+ 
+}

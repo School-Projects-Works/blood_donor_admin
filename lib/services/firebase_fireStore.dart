@@ -150,4 +150,15 @@ class FireStoreServices {
     var response= await _fireStore.collection('users').doc(id).update({'status': status}).then((value) => true).catchError((error) => false);
     return response;
   }
+
+  static Future<bool>updateDonationStatus(String id, String status, {double? quantity}) async{
+     Map<String,dynamic> map={};
+    if(quantity==null) {
+       map= {'status': status};
+    } else {
+       map= {'status': status, 'bloodQuantity': quantity};
+    }
+    var response= await _fireStore.collection('donations').doc(id).update(map).then((value) => true).catchError((error) => false);
+    return response;
+  }
 }

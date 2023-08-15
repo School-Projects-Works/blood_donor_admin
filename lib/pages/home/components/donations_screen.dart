@@ -1,4 +1,6 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:blood_donor_admin/core/components/widgets/custom_input.dart';
+import 'package:blood_donor_admin/core/components/widgets/smart_dialog.dart';
 import 'package:blood_donor_admin/models/donation_model.dart';
 import 'package:blood_donor_admin/styles/colors.dart';
 import 'package:data_table_2/data_table_2.dart';
@@ -175,7 +177,7 @@ class _DonationScreenState extends ConsumerState<DonationScreen> {
                                   ),
                                    if(e.status=='Accepted')
                                      const PopupMenuItem(
-                                    value: 'Done',
+                                    value: 'Donated',
                                     child: Text('Mark as done'),
                                   ),
                                 ]
@@ -184,9 +186,7 @@ class _DonationScreenState extends ConsumerState<DonationScreen> {
                           ],
                         ),
                       )
-                      .toList());
-
-        
+                      .toList());      
               },
               loading: () => const Center(
                 child: CircularProgressIndicator(),
@@ -199,6 +199,36 @@ class _DonationScreenState extends ConsumerState<DonationScreen> {
         ])
     );
   }
-
-  takeAction(Object? value, DonationModel e) {}
+final textFieldController = TextEditingController();
+  takeAction(String? value, DonationModel e) {
+    if(value=='Accepted'){
+      CustomDialog.showInfo(title: 'Accept Donation',
+      onConfirmText: 'Accept',
+      message: 'Are you sure you want to accept this donation request?', onConfirm: (){
+        ref.read(donationsProvider.notifier).updateDonationStatus(e.id!, 'Accepted');
+      });
+    }else if(value=='Rejected'){
+      ref.read(donationsProvider.notifier).updateDonationStatus(e.id!, 'Rejected');
+    }else if(value=='Cancelled'){
+      ref.read(donationsProvider.notifier).updateDonationStatus(e.id!, 'Cancelled');
+    }else if(value=='Donated'){
+      //show quantity dialog
+      CustomDialog.dismiss();
+      showDialog(context: context, builder: (context)=>AlertDialog(
+        title: const Text('Enter quantity'),
+        content: CustomTextFields(
+          controller: textFieldController,
+          isDigitOnly: true,
+          keyboardType: TextInputType.number,
+          hintText: 'Quantity in pine',
+        ),
+        actions: [
+          TextButton(onPressed: (){
+            ref.read(donationsProvider.notifier).updateDonationStatus(e.id!, 'Donated', quantity: double.parse(textFieldController.text));
+            Navigator.pop(context);
+          }, child: const Text('Donated'))
+        ],
+      ));
+  }
+  }
 }
